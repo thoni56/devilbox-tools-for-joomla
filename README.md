@@ -5,8 +5,8 @@ websites. If you, like me, are using Joomla for many sites, Akeeba
 backup is the goto solution not only for backups but there is also an
 automatic restore script from Akeeba that is called UNiTE.
 
-- Devilbox - docker based HTTPD/PHP/MYSQL... environment
-- Akeeba Backup and UNiTE for easy website backup and automated restore
+- Devilbox - a Docker based HTTPD/PHP/MYSQL... environment
+- Akeeba Backup and UNiTE - easy website backup and automated restore
 
 ## Installation
 
@@ -30,11 +30,13 @@ that.
 
 So here's an example structure
 
-- devilbox-projects
--- portfolio-copy
---- htdocs
--- app-copy
---- htdocs
+```
+├─ devilbox-projects
+├── portfolio-copy
+├─── htdocs
+├── app-copy
+├─── htdocs
+```
 
 Devilbox stipulates that each directory under the designated devilbox
 project directory becomes its own site and the files must be placed in
