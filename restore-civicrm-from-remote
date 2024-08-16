@@ -1,0 +1,21 @@
+#!/bin/bash
+
+site=`basename $PWD`
+
+if [ "$#" -ne 2 ]; then
+    cat <<EOF
+
+Usage: `basename $0` <host> <path>
+
+    host - need to be accessible using scp
+    path - path to the root of the website on the remote server
+
+EOF
+    exit 1
+fi
+
+# Download the backup
+$(dirname "$0")/download-backup $1 $2
+
+# Hand over to local restore
+$(dirname "$0")/restore-civicrm-from-file

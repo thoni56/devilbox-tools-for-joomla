@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    cat <<EOF
+
+Usage: `basename $0` <name>
+
+    name - the name to create user and database for
+
+This script ensures there is a Devilbox MySQL database and a user for the Joomla site to be restored.
+The single parameter will be the name of the database and the user as well as its password.
+It also ensures that the user has super priviliges since the use of triggers requires this.
+
+EOF
+    exit 1
+fi
+
+
+
+SITE=$1
+
+# Move to devilbox installation
+cd ~/Utveckling/devilbox
+
+# Kör SQL-kommandon i MySQL-container
+docker compose exec -it mysql mysql -u root -e "
+CREATE USER IF NOT EXISTS '$SITE'@'%' IDENTIFIED BY '$SITE';
+GRANT SUPER ON *.* TO '$SITE'@'%';
+CREATE DATABASE IF NOT EXISTS \`$SITE\`;
+GRANT ALL PRIVILEGES ON \`$SITE\`.* TO '$SITE'@'%';
+FLUSH PRIVILEGES;
+"

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+site=`basename $PWD`
+
+file=`ls -t1 site* | head -1`
+
+if [ -z "$file" ]; then
+    echo ERROR: no local file to restore
+    exit
+fi
+
+echo "Ensuring user and database exists..."
+$(dirname "$0")/mkdb $site
+
+echo "Restoring from local file $file..."
+
+yamlfile="from-local.yaml"
+
+echo "siteInfo:" > $yamlfile
+echo "    package: " $file >> $yamlfile
+
+cat >> $yamlfile <<EOF
+    absolutepath: /shared/httpd/$site/htdocs
+    name: 'DEVILBOX : $site'
+    deletePackage: false
+
+databaseInfo:
+    site:
+        dbdriver: mysqli
+        dbhost: mysql
+        dbuser: $site
+        dbpass: $site
+        dbname: $site
+        dbprefix: xxxx_
+        utf8mb4: true
+
+EOF
+
+cd ~/Utveckling/devilbox
+docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; ../unite restore $yamlfile"
