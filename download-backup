@@ -7,7 +7,7 @@ if [ "$#" -ne 2 ]; then
 
 Usage: `basename $0` <host> <path>
 
-    host - need to be accessible using scp
+    host - need to be accessible using ssh/scp
     path - path to the root of the website on the remote server
 
 EOF
@@ -17,7 +17,9 @@ fi
 host=$1
 remotewebroot=$2
 
-latest=`ssh $host "ls -t $remotewebroot/administrator/components/com_akeeba/backup/site* | head -1"`
+# Try to copy backup from Joomla, they are in different places
+latest=$(ssh $host "ls -t $remotewebroot/administrator/components/com_akeeba/backup/site* 2>/dev/null || ls -t $remotewebroot/administrator/components/com_akeebabackup/backup/site* | head -1")
+
 file=`basename $latest`
 if [ ! -f "./$file" ]; then
     echo "Downloading '$file'"
