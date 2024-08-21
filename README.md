@@ -12,6 +12,15 @@ automatic restore script from Akeeba that is called UNiTE.
 
 Clone or download this repo and add it to your path.
 
+## Prerequisites
+
+You need
+
+- Devilbox
+- PHP
+- UNiTE in your path
+- a `devilbox` command script (which just cd's into the Devilbox installation and executes `shell.sh`)
+
 ## Context
 
 Having taken a backup of your site using Akeeba Backup you want to

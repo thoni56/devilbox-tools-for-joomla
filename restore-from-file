@@ -36,5 +36,11 @@ databaseInfo:
 
 EOF
 
-cd ~/Utveckling/devilbox
+# Copy the UNiTE script
+cp `which unite` ..
+
+# Goto Devilbox installation and
+devilbox
+
+# Exec the UNiTE restoration from inside the Devilbox Docker PHP container
 docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; ../unite restore $yamlfile"
