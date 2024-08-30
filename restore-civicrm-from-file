@@ -28,13 +28,13 @@ cat >> $yamlfile <<EOF
 
 databaseInfo:
     site:
-        dbdriver: mysqli
-        dbhost: mysql
-        dbuser: $site
-        dbpass: $site
-        dbname: $site
-        dbprefix: evc4_
-        utf8mb4: true
+       dbdriver: mysqli
+       dbhost: mysql
+       dbuser: $site
+       dbpass: $site
+       dbname: $site
+       dbprefix: evc4_
+       utf8mb4: true
 
 handlers:
     - ./CiviCRM4JoomlaFixer.php
@@ -42,5 +42,9 @@ EOF
 
 new_web_host=$(basename "$(pwd)")."localhost.tv"
 
+# Copy the UNiTE script
+cp `which unite` ..
+
+# Exec the UNiTE restoration from inside the Devilbox Docker PHP container
 cd ~/Utveckling/devilbox
 docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; NEW_WEB_HOST=$new_web_host ../unite restore $yamlfile"

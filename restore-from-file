@@ -26,21 +26,19 @@ cat >> $yamlfile <<EOF
 
 databaseInfo:
     site:
-        dbdriver: mysqli
-        dbhost: mysql
-        dbuser: $site
-        dbpass: $site
-        dbname: $site
-        dbprefix: xxxx_
-        utf8mb4: true
+       dbdriver: mysqli
+       dbhost: mysql
+       dbuser: $site
+       dbpass: $site
+       dbname: $site
+       dbprefix: xxxx_
+       utf8mb4: true
 
 EOF
 
 # Copy the UNiTE script
 cp `which unite` ..
 
-# Goto Devilbox installation and
-devilbox
-
 # Exec the UNiTE restoration from inside the Devilbox Docker PHP container
+cd ~/Utveckling/devilbox
 docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; ../unite restore $yamlfile"

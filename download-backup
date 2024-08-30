@@ -17,17 +17,21 @@ fi
 host=$1
 remotewebroot=$2
 
-# Try to copy backup from Joomla, they are in different places
+# Try to copy backup from Joomla, they are in different places for J3/J4
 latest=$(ssh $host "ls -t $remotewebroot/administrator/components/com_akeeba/backup/site* 2>/dev/null || ls -t $remotewebroot/administrator/components/com_akeebabackup/backup/site* | head -1")
+
+if [ -z "$latest" ]; then
+    echo "Could not access a remote backup file"
+    exit -1
+fi
 
 file=`basename $latest`
 if [ ! -f "./$file" ]; then
     echo "Downloading '$file'"
     if ! scp $host:$latest . ; then
-        echo "Failed downloading backup from remote"
-        exit 1
+	echo "Failed downloading backup from remote"
+	exit 1
     fi
 else
     echo "Skipping download, remote backup is already downloaded. Force a fresh download by removing '$file'."
 fi
-
