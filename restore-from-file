@@ -11,6 +11,9 @@ fi
 
 echo "Ensuring user and database exists..."
 $(dirname "$0")/mkdb $site
+if [ $? -ne 0 ]; then
+    exit 1
+fi
 
 echo "Restoring from local file $file..."
 

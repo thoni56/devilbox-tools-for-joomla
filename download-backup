@@ -22,7 +22,7 @@ latest=$(ssh $host "ls -t $remotewebroot/administrator/components/com_akeeba/bac
 
 if [ -z "$latest" ]; then
     echo "Could not access a remote backup file"
-    exit -1
+    exit 1
 fi
 
 file=`basename $latest`
