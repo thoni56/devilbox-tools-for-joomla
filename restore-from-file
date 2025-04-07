@@ -17,31 +17,24 @@ fi
 
 echo "Restoring from local file $file..."
 
-yamlfile="from-local.yaml"
-
-echo "siteInfo:" > $yamlfile
-echo "    package: " $file >> $yamlfile
-
-cat >> $yamlfile <<EOF
-    absolutepath: /shared/httpd/$site/htdocs
-    name: 'DEVILBOX : $site'
-    deletePackage: false
-
-databaseInfo:
-    site:
-       dbdriver: mysqli
-       dbhost: mysql
-       dbuser: $site
-       dbpass: $site
-       dbname: $site
-       dbprefix: xxxx_
-       utf8mb4: true
-
-EOF
-
-# Copy the UNiTE script
-cp `which unite` ..
-
-# Exec the UNiTE restoration from inside the Devilbox Docker PHP container
+# Exec the Kickstart restoration from inside the Devilbox Docker PHP container
 cd ~/Utveckling/devilbox
-docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; ../unite restore $yamlfile"
+# Unpack
+echo "Unpacking..."
+docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php ../kickstart.php $file htdocs -silent"
+
+# Create a restore configuration
+echo "Creating restore configuration..."
+docker compose exec --user devilbox php bash -lc "cd $site/htdocs/installation; php ./cli.php config:make"
+
+# Tweak it
+echo "Tweaking it..."
+docker compose exec --user devilbox php bash -lc "sed -Ei 's/^(\s*)(dbname|dbuser|dbpass):.*/\1\2: $site/' $site/htdocs/installation/config.yml.php"
+docker compose exec --user devilbox php bash -lc "sed -Ei 's/^(\s*)(dbhost):.*/\1\2: mysql/' $site/htdocs/installation/config.yml.php"
+
+# Do the restore
+docker compose exec --user devilbox php bash -lc "cd $site/htdocs/installation; php ./cli.php execute"
+
+# Remove installation directory
+echo "Removing installation directory..."
+docker compose exec --user devilbox php bash -lc "rm -rf $site/htdocs/installation"
