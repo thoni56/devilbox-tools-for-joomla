@@ -2,10 +2,15 @@
 
 site=`basename $PWD`
 
-file=`ls -t1 site* | head -1`
+file=`ls -t1 site*.jpa | head -1`
 
 if [ -z "$file" ]; then
-    echo ERROR: no local file to restore
+    echo "ERROR: no local file to restore"
+    exit
+fi
+
+if [ ! -f "kickstart.php" ]; then
+    echo "ERROR: you need to have a 'kickstart.php' in this directory"
     exit
 fi
 
@@ -21,7 +26,7 @@ echo "Restoring from local file $file..."
 cd ~/Utveckling/devilbox
 # Unpack
 echo "Unpacking..."
-docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php ../kickstart.php $file htdocs -silent"
+docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php kickstart.php $file htdocs -silent"
 
 # Create a restore configuration
 echo "Creating restore configuration..."
