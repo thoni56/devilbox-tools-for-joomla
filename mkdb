@@ -26,7 +26,8 @@ cd ~/Utveckling/devilbox
 docker compose exec -it mysql mysql -u root -e "
 CREATE USER IF NOT EXISTS '$SITE'@'%' IDENTIFIED BY '$SITE';
 GRANT SUPER ON *.* TO '$SITE'@'%';
-CREATE DATABASE IF NOT EXISTS \`$SITE\`;
+DROP DATABASE IF EXISTS \`$SITE\`;
+CREATE DATABASE \`$SITE\`;
 GRANT ALL PRIVILEGES ON \`$SITE\`.* TO '$SITE'@'%';
 FLUSH PRIVILEGES;
 "
