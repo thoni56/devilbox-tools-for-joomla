@@ -36,6 +36,7 @@ docker compose exec --user devilbox php bash -lc "cd $site/htdocs/installation; 
 echo "Tweaking it..."
 docker compose exec --user devilbox php bash -lc "sed -Ei 's/^(\s*)(dbname|dbuser|dbpass):.*/\1\2: $site/' $site/htdocs/installation/config.yml.php"
 docker compose exec --user devilbox php bash -lc "sed -Ei 's/^(\s*)(dbhost):.*/\1\2: mysql/' $site/htdocs/installation/config.yml.php"
+docker compose exec --user devilbox php bash -lc "sed -Ei 's/^(\s*)(sitename):.*/\1\2: $site/' $site/htdocs/installation/config.yml.php"
 
 # Do the restore
 docker compose exec --user devilbox php bash -lc "cd $site/htdocs/installation; php ./cli.php execute"
