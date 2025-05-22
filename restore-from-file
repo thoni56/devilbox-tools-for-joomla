@@ -32,6 +32,13 @@ cd $DEVILBOX_HOME
 echo "Unpacking..."
 docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php kickstart.php $file htdocs -silent"
 
+# If there is no `cli.php` in the installation directory, then it is old version of Akeeba
+if [ ! -f "installation/cli.php" ]; then
+   echo "Extracting an old version Akeeba backup, no cli. You need to browse to '/kickstart.php' to restore your site."
+   exit 1
+fi
+
+
 # Create a restore configuration
 echo "Creating restore configuration..."
 docker compose exec --user devilbox php bash -lc "cd $site/htdocs/installation; php ./cli.php config:make"
