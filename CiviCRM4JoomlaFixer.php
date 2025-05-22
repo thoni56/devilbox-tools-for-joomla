@@ -23,6 +23,9 @@ $new_web_host = getenv('NEW_WEB_HOST');
 // Figure out the old values from the civicrm settings
 $civicrm_root = '';
 $lines = file('htdocs/administrator/components/com_civicrm/civicrm.settings.php');
+if ($lines === false) {
+    die("Error: settings file not found or unreadable.");
+}
 foreach ($lines as $line) {
     if (strpos($line, '$civicrm_root') === 0) {
         $civicrm_root = trim(explode('=', $line)[1]);
@@ -31,9 +34,17 @@ foreach ($lines as $line) {
 }
 
 $old_path = '';
+$found = false;
 $parts = explode('/', $civicrm_root);
-for ($i = 1; $parts[$i] != 'administrator'; $i++) {
+for ($i = 1; $i < count($parts); $i++) {
+    if ($parts[$i] === 'administrator') {
+        $found = true;
+        break;
+    }
     $old_path .= $parts[$i] . '/';
+}
+if (!$found) {
+    die("Error: 'administrator' not found in path.");
 }
 
 $old_web_host = '';
