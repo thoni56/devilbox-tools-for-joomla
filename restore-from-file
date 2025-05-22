@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ -z "$DEVILBOX_HOME" ]; then
+    echo "You need to have DEVILBOX_HOME set to the home directory of your Devilbox installation"
+    exit 1
+fi
 
 site=`basename $PWD`
 
@@ -23,7 +27,7 @@ fi
 echo "Restoring from local file $file..."
 
 # Exec the Kickstart restoration from inside the Devilbox Docker PHP container
-cd ~/Utveckling/devilbox
+cd $DEVILBOX_HOME
 # Unpack
 echo "Unpacking..."
 docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php kickstart.php $file htdocs -silent"

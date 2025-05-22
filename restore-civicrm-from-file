@@ -1,6 +1,9 @@
 #!/bin/bash
 
 $(dirname "$0")/restore-from-file
+if [ $? -ne 0 ]; then
+    exit 1
+fi
 
 site=`basename $PWD`
 
@@ -9,5 +12,5 @@ new_web_host=$(basename "$(pwd)")."localhost.tv"
 # Run the CiviCRM tweaking which needs to run inside the devilbox docker container
 echo "Fixing CiviCRM configuration..."
 cp $(dirname "$0")/CiviCRM4JoomlaFixer.php .
-cd ~/Utveckling/devilbox
+cd $DEVILBOX_HOME
 docker compose exec --user devilbox php bash -lc "cd $site; NEW_WEB_HOST=$new_web_host php ./CiviCRM4JoomlaFixer.php"
