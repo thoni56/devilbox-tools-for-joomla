@@ -5,6 +5,7 @@ if [ -z "$DEVILBOX_HOME" ]; then
 fi
 
 site=`basename $PWD`
+project_dir="$PWD"
 
 file=`ls -t1 site*.jpa | head -1`
 
@@ -33,7 +34,7 @@ echo "Unpacking..."
 docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php kickstart.php $file htdocs -silent"
 
 # If there is no `cli.php` in the installation directory, then it is old version of Akeeba
-if [ ! -f "installation/cli.php" ]; then
+if [ ! -f "$project_dir/htdocs/installation/cli.php" ]; then
    echo "Extracting an old version Akeeba backup, no cli. Browse to the site to start installation."
    exit 1
 fi
