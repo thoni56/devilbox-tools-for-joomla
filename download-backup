@@ -18,20 +18,36 @@ host=$1
 remotewebroot=$2
 
 # Try to copy backup from Joomla, they are in different places for J3/J4
-latest=$(ssh $host "ls -t $remotewebroot/administrator/components/com_akeeba/backup/site* 2>/dev/null || ls -t $remotewebroot/administrator/components/com_akeebabackup/backup/site* | head -1")
+# Only look for .jpa files to get the latest backup
+latest=$(ssh $host "ls -t $remotewebroot/administrator/components/com_akeeba/backup/site*.jpa 2>/dev/null || ls -t $remotewebroot/administrator/components/com_akeebabackup/backup/site*.jpa" | head -1)
 
 if [ -z "$latest" ]; then
     echo "Could not access a remote backup file"
     exit 1
 fi
 
-file=`basename $latest`
-if [ ! -f "./$file" ]; then
-    echo "Downloading '$file'"
-    if ! scp $host:$latest . ; then
-	echo "Failed downloading backup from remote"
-	exit 1
-    fi
-else
-    echo "Skipping download, remote backup is already downloaded. Force a fresh download by removing '$file'."
+file=$(basename "$latest")
+remotedir=$(dirname "$latest")
+basename_no_ext="${file%.jpa}"
+
+# Find all parts of the backup (main .jpa and any .j01, .j02, etc.)
+all_parts=$(ssh $host "ls '$remotedir/$basename_no_ext'.jpa '$remotedir/$basename_no_ext'.j[0-9][0-9] 2>/dev/null")
+
+if [ -z "$all_parts" ]; then
+    echo "Could not find backup parts on remote"
+    exit 1
 fi
+
+# Download each part that doesn't already exist locally
+for part in $all_parts; do
+    partfile=`basename $part`
+    if [ ! -f "./$partfile" ]; then
+        echo "Downloading '$partfile'"
+        if ! scp $host:$part . ; then
+            echo "Failed downloading '$partfile' from remote"
+            exit 1
+        fi
+    else
+        echo "Skipping '$partfile', already exists locally."
+    fi
+done

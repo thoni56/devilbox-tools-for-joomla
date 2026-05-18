@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ -z "$DEVILBOX_HOME" ]; then
+    echo "You need to have DEVILBOX_HOME set to the home directory of your Devilbox installation"
+    exit 1
+fi
 
 if [ "$#" -ne 1 ]; then
     cat <<EOF
@@ -20,7 +24,7 @@ fi
 SITE=$1
 
 # Move to devilbox installation
-cd ~/Utveckling/devilbox
+cd $DEVILBOX_HOME
 
 # Kör SQL-kommandon i MySQL-container
 docker compose exec -it mysql mysql -u root -e "
