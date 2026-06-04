@@ -13,4 +13,4 @@ new_web_host=$(basename "$(pwd)")."localhost.tv"
 echo "Fixing CiviCRM configuration..."
 cp $(dirname "$0")/CiviCRM4JoomlaFixer.php .
 cd $DEVILBOX_HOME
-docker compose exec --user devilbox php bash -lc "cd $site; NEW_WEB_HOST=$new_web_host php ./CiviCRM4JoomlaFixer.php"
+docker compose exec --user devilbox php bash -lc "cd $site && NEW_WEB_HOST=$new_web_host php ./CiviCRM4JoomlaFixer.php"

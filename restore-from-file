@@ -31,7 +31,7 @@ echo "Restoring from local file $file..."
 cd $DEVILBOX_HOME
 # Unpack
 echo "Unpacking..."
-docker compose exec --user devilbox php bash -lc "cd $site; rm -rf htdocs/*; php kickstart.php $file htdocs -silent"
+docker compose exec --user devilbox php bash -lc "cd $site && mkdir -p htdocs && rm -rf htdocs/* && php kickstart.php $file htdocs -silent"
 
 # If there is no `cli.php` in the installation directory, then it is old version of Akeeba
 if [ ! -f "$project_dir/htdocs/installation/cli.php" ]; then
