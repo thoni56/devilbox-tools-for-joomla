@@ -20,6 +20,7 @@ You need
 - PHP
 - Kickstart - download from akeeba.com
 - a `devilbox` command script (which just cd's into the Devilbox installation and executes `shell.sh`)
+- `lftp` - used by `download-backup` to fetch backups over SFTP (works against hosts that allow the SFTP subsystem but no interactive shell). Install with `brew install lftp` on macOS, or your distro's package manager on Linux. Authentication uses your `~/.ssh/config` and ssh agent — no separate credentials needed.
 
 ## Context
 

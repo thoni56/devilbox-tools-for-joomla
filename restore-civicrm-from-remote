@@ -7,7 +7,7 @@ if [ "$#" -ne 2 ]; then
 
 Usage: `basename $0` <host> <path>
 
-    host - need to be accessible using scp
+    host - sftp-accessible host (bare alias from ~/.ssh/config, or an sftp:// URL)
     path - path to the root of the website on the remote server
 
 EOF
